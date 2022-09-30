@@ -151,7 +151,7 @@ resource "azurerm_service_plan" "asp" {
   location                     = azurerm_resource_group.rg.location
   os_type                      = "Linux"
   app_service_environment_id   = azurerm_app_service_environment_v3.ase3.id
-  sku_name                     = "I2v2"
+  sku_name                     = "I1v2"
   worker_count                 = 3
   zone_balancing_enabled       = true
 }
