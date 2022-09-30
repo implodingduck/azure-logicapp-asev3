@@ -197,3 +197,19 @@ resource "azurerm_logic_app_standard" "example" {
   }
   tags = local.tags
 }
+
+
+data "azurerm_storage_share" "content" {
+  name                 = "${azurerm_logic_app_standard.example.name}-content"
+  storage_account_name = azurerm_storage_account.sa.name
+  quota                = 50
+}
+
+resource "azurerm_storage_share_file" "workflow" {
+  depends_on = [
+    azurerm_storage_share_directory.stateless1
+  ]
+  name             = "site/wwwroot/stateless1/workflow.json"
+  storage_share_id = data.azurerm_storage_share.content
+  source           = "../stateless1/workflow.json"
+}
