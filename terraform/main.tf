@@ -205,9 +205,7 @@ data "azurerm_storage_share" "content" {
 }
 
 resource "azurerm_storage_share_file" "workflow" {
-  depends_on = [
-    azurerm_storage_share_directory.stateless1
-  ]
+
   name             = "site/wwwroot/stateless1/workflow.json"
   storage_share_id = data.azurerm_storage_share.content
   source           = "../stateless1/workflow.json"
