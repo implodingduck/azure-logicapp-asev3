@@ -72,9 +72,26 @@ resource "azurerm_subnet" "default" {
   address_prefixes     = ["10.1.0.0/24"]
 }
 
+resource "azurerm_subnet" "ase" {
+  name                 = "ase-subnet-eastus"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.default.name
+  address_prefixes     = ["10.1.1.0/24"]
+}
+
+
 resource "azurerm_private_dns_zone" "ase" {
   name                      = "${local.func_name}.appserviceenvironment.net"
   resource_group_name       = azurerm_resource_group.rg.name
+  delegation {
+    name = "delegation"
+
+    service_delegation {
+      name    = "Microsoft.Web/hostingEnvironments"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
+    }
+  }
+
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "appserviceenvironment_net_link" {
@@ -88,7 +105,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "appserviceenvironment_
 resource "azurerm_app_service_environment_v3" "ase3" {
   name                          	        = "${local.func_name}"
   resource_group_name                     = azurerm_resource_group.rg.name
-  subnet_id                               = azurerm_subnet.default.id
+  subnet_id                               = azurerm_subnet.ase.id
   internal_load_balancing_mode            = "Web, Publishing" 
   allow_new_private_endpoint_connections  = false
   zone_redundant                          = true
