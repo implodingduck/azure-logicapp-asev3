@@ -207,6 +207,6 @@ data "azurerm_storage_share" "content" {
 resource "azurerm_storage_share_file" "workflow" {
 
   name             = "site/wwwroot/stateless1/workflow.json"
-  storage_share_id = data.azurerm_storage_share.content
+  storage_share_id = data.azurerm_storage_share.content.id
   source           = "../stateless1/workflow.json"
 }
