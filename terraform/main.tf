@@ -56,7 +56,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_virtual_network" "default" {
-  name                = "${local.cluster_name}-vnet-eastus"
+  name                = "${local.func_name}-vnet-eastus"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = ["10.1.0.0/16"]
