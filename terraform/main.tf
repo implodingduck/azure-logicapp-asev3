@@ -202,7 +202,6 @@ resource "azurerm_logic_app_standard" "example" {
 data "azurerm_storage_share" "content" {
   name                 = "${azurerm_logic_app_standard.example.name}-content"
   storage_account_name = azurerm_storage_account.sa.name
-  quota                = 50
 }
 
 resource "azurerm_storage_share_file" "workflow" {
