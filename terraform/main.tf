@@ -153,6 +153,7 @@ resource "azurerm_service_plan" "asp" {
   app_service_environment_id   = azurerm_app_service_environment_v3.ase3.id
   sku_name                     = "I2v2"
   worker_count                 = 3
+  zone_balancing_enabled       = true
 }
 
 resource "azurerm_storage_account" "sa" {
