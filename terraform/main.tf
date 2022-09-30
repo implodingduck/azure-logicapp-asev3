@@ -82,6 +82,9 @@ resource "azurerm_subnet" "ase" {
 
     service_delegation {
       name    = "Microsoft.Web/hostingEnvironments"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/action"
+      ]
     }
   }
 }
@@ -204,8 +207,17 @@ data "azurerm_storage_share" "content" {
   storage_account_name = azurerm_storage_account.sa.name
 }
 
-resource "azurerm_storage_share_file" "workflow" {
+resource "azurerm_storage_share_directory" "dir" {
 
+  name                 = "site/wwwroot/stateless1"
+  share_name           = data.azurerm_storage_share.content.name
+  storage_account_name = azurerm_storage_account.sa.name
+}
+
+resource "azurerm_storage_share_file" "workflow" {
+  depends_on = [
+    azurerm_storage_share_directory.dir
+  ]
   name             = "site/wwwroot/stateless1/workflow.json"
   storage_share_id = data.azurerm_storage_share.content.id
   source           = "../stateless1/workflow.json"
