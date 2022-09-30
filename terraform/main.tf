@@ -77,21 +77,19 @@ resource "azurerm_subnet" "ase" {
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.default.name
   address_prefixes     = ["10.1.1.0/24"]
+  delegation {
+    name = "delegation"
+
+    service_delegation {
+      name    = "Microsoft.Web/hostingEnvironments"
+    }
+  }
 }
 
 
 resource "azurerm_private_dns_zone" "ase" {
   name                      = "${local.func_name}.appserviceenvironment.net"
   resource_group_name       = azurerm_resource_group.rg.name
-  delegation {
-    name = "delegation"
-
-    service_delegation {
-      name    = "Microsoft.Web/hostingEnvironments"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
-    }
-  }
-
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "appserviceenvironment_net_link" {
