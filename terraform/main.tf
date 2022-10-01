@@ -15,7 +15,11 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 
   subscription_id = var.subscription_id
 }
@@ -166,6 +170,7 @@ resource "azurerm_storage_account" "sa" {
   account_kind             = "StorageV2"
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  allow_nested_items_to_be_public = false
 
   tags = local.tags
 }
