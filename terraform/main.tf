@@ -95,21 +95,21 @@ resource "azurerm_private_dns_zone" "ase" {
   resource_group_name       = azurerm_resource_group.rg.name
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "appserviceenvironment_net_link" {
-  name                  = "${local.func_name}-link"
-  resource_group_name   = azurerm_resource_group.rg.name
+# resource "azurerm_private_dns_zone_virtual_network_link" "appserviceenvironment_net_link" {
+#   name                  = "${local.func_name}-link"
+#   resource_group_name   = azurerm_resource_group.rg.name
 
-  private_dns_zone_name = azurerm_private_dns_zone.ase.name
-  virtual_network_id    = azurerm_virtual_network.default.id
-}
+#   private_dns_zone_name = azurerm_private_dns_zone.ase.name
+#   virtual_network_id    = azurerm_virtual_network.default.id
+# }
 
 resource "azurerm_app_service_environment_v3" "ase3" {
   name                          	        = "${local.func_name}"
   resource_group_name                     = azurerm_resource_group.rg.name
   subnet_id                               = azurerm_subnet.ase.id
-  internal_load_balancing_mode            = "Web, Publishing" 
+  #internal_load_balancing_mode            = "Web, Publishing" 
   allow_new_private_endpoint_connections  = false
-  zone_redundant                          = true
+  zone_redundant                          = false
 
   cluster_setting {
     name  = "DisableTls1.0"
@@ -155,8 +155,8 @@ resource "azurerm_service_plan" "asp" {
   os_type                      = "Linux"
   app_service_environment_id   = azurerm_app_service_environment_v3.ase3.id
   sku_name                     = "I1v2"
-  worker_count                 = 3
-  zone_balancing_enabled       = true
+  worker_count                 = 1
+  #zone_balancing_enabled       = true
 }
 
 resource "azurerm_storage_account" "sa" {
@@ -189,6 +189,7 @@ resource "azurerm_logic_app_standard" "example" {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
     "FUNCTIONS_WORKER_RUNTIME"       = "node"
     "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
+    "WEBSITE_VNET_ROUTE_ALL"           = 1
   }
 
   site_config {
