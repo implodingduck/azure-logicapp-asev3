@@ -152,60 +152,60 @@ resource "azurerm_private_dns_a_record" "root_domain" {
 }
 
 
-resource "azurerm_service_plan" "asp" {
-  name                         = "${local.func_name}-asp"
-  resource_group_name          = azurerm_resource_group.rg.name
-  location                     = azurerm_resource_group.rg.location
-  os_type                      = "Windows"
-  app_service_environment_id   = azurerm_app_service_environment_v3.ase3.id
-  sku_name                     = "I1v2"
-  worker_count                 = 1
-  #zone_balancing_enabled       = true
-}
+# resource "azurerm_service_plan" "asp" {
+#   name                         = "${local.func_name}-asp"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   location                     = azurerm_resource_group.rg.location
+#   os_type                      = "Windows"
+#   app_service_environment_id   = azurerm_app_service_environment_v3.ase3.id
+#   sku_name                     = "I1v2"
+#   worker_count                 = 1
+#   #zone_balancing_enabled       = true
+# }
 
-resource "azurerm_storage_account" "sa" {
-  name                     = "sa${local.func_name}"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_kind             = "StorageV2"
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  allow_nested_items_to_be_public = false
+# resource "azurerm_storage_account" "sa" {
+#   name                     = "sa${local.func_name}"
+#   resource_group_name      = azurerm_resource_group.rg.name
+#   location                 = azurerm_resource_group.rg.location
+#   account_kind             = "StorageV2"
+#   account_tier             = "Standard"
+#   account_replication_type = "LRS"
+#   allow_nested_items_to_be_public = false
 
-  tags = local.tags
-}
+#   tags = local.tags
+# }
 
-resource "azurerm_application_insights" "app" {
-  name                = "${local.func_name}-insights"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  application_type    = "other"
-  workspace_id        = data.azurerm_log_analytics_workspace.default.id
-}
+# resource "azurerm_application_insights" "app" {
+#   name                = "${local.func_name}-insights"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   application_type    = "other"
+#   workspace_id        = data.azurerm_log_analytics_workspace.default.id
+# }
 
-resource "azurerm_logic_app_standard" "example" {
-  name                       = "la-${local.func_name}"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
-  app_service_plan_id        = azurerm_service_plan.asp.id
-  storage_account_name       = azurerm_storage_account.sa.name
-  storage_account_access_key = azurerm_storage_account.sa.primary_access_key
-  app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
-    "FUNCTIONS_WORKER_RUNTIME"       = "node"
-    "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
-    "WEBSITE_VNET_ROUTE_ALL"           = 1
-  }
+# resource "azurerm_logic_app_standard" "example" {
+#   name                       = "la-${local.func_name}"
+#   location                   = azurerm_resource_group.rg.location
+#   resource_group_name        = azurerm_resource_group.rg.name
+#   app_service_plan_id        = azurerm_service_plan.asp.id
+#   storage_account_name       = azurerm_storage_account.sa.name
+#   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
+#   app_settings = {
+#     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
+#     "FUNCTIONS_WORKER_RUNTIME"       = "node"
+#     "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
+#     "WEBSITE_VNET_ROUTE_ALL"           = 1
+#   }
 
-  site_config {
-    ftps_state                = "Disabled"
-  }
+#   site_config {
+#     ftps_state                = "Disabled"
+#   }
 
-  identity {
-    type = "SystemAssigned"
-  }
-  tags = local.tags
-}
+#   identity {
+#     type = "SystemAssigned"
+#   }
+#   tags = local.tags
+# }
 
 
 data "azurerm_storage_share" "content" {
