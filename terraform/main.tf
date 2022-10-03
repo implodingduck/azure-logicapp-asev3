@@ -208,17 +208,17 @@ resource "azurerm_private_dns_a_record" "root_domain" {
 # }
 
 
-data "azurerm_storage_share" "content" {
-  name                 = "${azurerm_logic_app_standard.example.name}-content"
-  storage_account_name = azurerm_storage_account.sa.name
-}
+# data "azurerm_storage_share" "content" {
+#   name                 = "${azurerm_logic_app_standard.example.name}-content"
+#   storage_account_name = azurerm_storage_account.sa.name
+# }
 
-resource "azurerm_storage_share_directory" "dir" {
+# resource "azurerm_storage_share_directory" "dir" {
 
-  name                 = "site/wwwroot/stateless1"
-  share_name           = data.azurerm_storage_share.content.name
-  storage_account_name = azurerm_storage_account.sa.name
-}
+#   name                 = "site/wwwroot/stateless1"
+#   share_name           = data.azurerm_storage_share.content.name
+#   storage_account_name = azurerm_storage_account.sa.name
+# }
 
 # resource "azurerm_storage_share_file" "workflow" {
 #   depends_on = [
