@@ -194,11 +194,12 @@ resource "azurerm_logic_app_standard" "example" {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.app.instrumentation_key
     "FUNCTIONS_WORKER_RUNTIME"       = "node"
     "WEBSITE_NODE_DEFAULT_VERSION"   = "~14"
-    "WEBSITE_VNET_ROUTE_ALL"           = 1
   }
 
   site_config {
-    ftps_state                = "Disabled"
+    ftps_state             = "Disabled"
+    always_on              = true
+    vnet_route_all_enabled = true
   }
 
   identity {
