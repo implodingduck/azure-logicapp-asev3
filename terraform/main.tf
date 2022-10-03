@@ -156,7 +156,7 @@ resource "azurerm_service_plan" "asp" {
   name                         = "${local.func_name}-asp"
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = azurerm_resource_group.rg.location
-  os_type                      = "Linux"
+  os_type                      = "Windows"
   app_service_environment_id   = azurerm_app_service_environment_v3.ase3.id
   sku_name                     = "I1v2"
   worker_count                 = 1
@@ -220,11 +220,11 @@ resource "azurerm_storage_share_directory" "dir" {
   storage_account_name = azurerm_storage_account.sa.name
 }
 
-resource "azurerm_storage_share_file" "workflow" {
-  depends_on = [
-    azurerm_storage_share_directory.dir
-  ]
-  name             = "site/wwwroot/stateless1/workflow.json"
-  storage_share_id = data.azurerm_storage_share.content.id
-  source           = "../stateless1/workflow.json"
-}
+# resource "azurerm_storage_share_file" "workflow" {
+#   depends_on = [
+#     azurerm_storage_share_directory.dir
+#   ]
+#   name             = "site/wwwroot/stateless1/workflow.json"
+#   storage_share_id = data.azurerm_storage_share.content.id
+#   source           = "../stateless1/workflow.json"
+# }
