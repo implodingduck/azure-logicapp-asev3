@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=3.21.0"
+      version = "=3.36.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -92,7 +92,25 @@ resource "azurerm_subnet" "ase" {
     }
   }
 }
+resource "azurerm_subnet" "pe" {
+  name                 = "snet-privateendpoints-${local.loc_for_naming}"
+  resource_group_name  = azurerm_virtual_network.default.resource_group_name
+  virtual_network_name = azurerm_virtual_network.default.name
+  address_prefixes     = ["10.1.2.0/26"]
 
+  private_endpoint_network_policies_enabled = true
+
+}
+
+resource "azurerm_private_dns_zone" "blob" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+resource "azurerm_private_dns_zone" "file" {
+  name                = "privatelink.file.core.windows.net"
+  resource_group_name = azurerm_resource_group.rg.name
+}
 
 resource "azurerm_private_dns_zone" "ase" {
   name                      = "${local.func_name}.appserviceenvironment.net"
